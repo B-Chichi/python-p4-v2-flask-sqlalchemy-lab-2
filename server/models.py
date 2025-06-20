@@ -25,11 +25,11 @@ class Review(db.Model, SerializerMixin):
     serialize_rules = ("-customer.reviews", "-item.reviews")
     def to_dict(self):
         return {
-        "id": self.id,
-        "comment": self.comment,
-        "customer": self.customer,
-        "item": self.item
-    }
+            "id": self.id,
+            "comment": self.comment,
+            "customer": self.customer.to_dict() if self.customer else None,
+            "item": self.item,
+        }
     
 
 
@@ -51,7 +51,7 @@ class Customer(db.Model):
         return {
         "id": self.id,
         "name": self.name,
-        "reviews": [review.to_dict() for review in self.reviews if review],
+        "reviews": self.reviews,
         "items": [item.to_dict() for item in self.items if item]
     }
 
