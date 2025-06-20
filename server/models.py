@@ -27,15 +27,10 @@ class Review(db.Model, SerializerMixin):
         return {
             "id": self.id,
             "comment": self.comment,
-            "customer": self.customer.to_dict() if self.customer else None,
+            "customer": self.customer,
             "item": self.item,
         }
     
-
-
-
-
-
 
 
 class Customer(db.Model):
