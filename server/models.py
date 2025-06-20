@@ -27,9 +27,10 @@ class Review(db.Model, SerializerMixin):
         return {
             "id": self.id,
             "comment": self.comment,
-            "customer": self.customer.to_dict() if self.customer else None,
-            "item": self.item.to_dict() if self.item else None
+            "customer_id": self.customer_id,
+            "item_id": self.item_id
     }
+
 
 
 
@@ -48,8 +49,9 @@ class Customer(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "items": [item.to_dict() for item in self.items],
-        }
+            "items": [item.to_dict() for item in self.items if item]
+    }
+
 
     def __repr__(self):
         return f'<Customer {self.id}, {self.name}>'
@@ -65,7 +67,13 @@ class Item(db.Model):
 
     serialize_rules = ("-reviews.item",)
     def to_dict(self):
-        return {"id": self.id, "name": self.name, "price": self.price}
+        return {
+            "id": self.id,
+            "name": self.name,
+            "price": self.price,
+            "reviews": [review.to_dict() for review in self.reviews if review]
+    }
+
 
     def __repr__(self):
         return f'<Item {self.id}, {self.name}, {self.price}>'
