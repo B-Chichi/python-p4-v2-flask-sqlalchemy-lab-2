@@ -27,7 +27,9 @@ class Review(db.Model, SerializerMixin):
         return {
             "id": self.id,
             "comment": self.comment,
-            "customer": self.customer,
+            "customer": {"id": self.customer.id, "name": self.customer.name}
+            if self.customer
+            else None,
             "item": self.item,
         }
     
