@@ -48,10 +48,12 @@ class Customer(db.Model):
     serialize_rules = ("-reviews.customer",)
     def to_dict(self):
         return {
-            "id": self.id,
-            "name": self.name,
-            "items": [item.to_dict() for item in self.items if item]
+        "id": self.id,
+        "name": self.name,
+        "reviews": [review.to_dict() for review in self.reviews if review],
+        "items": [item.to_dict() for item in self.items if item]
     }
+
 
 
     def __repr__(self):
