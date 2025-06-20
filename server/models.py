@@ -23,6 +23,14 @@ class Review(db.Model, SerializerMixin):
     item = db.relationship("Item", back_populates="reviews")
 
     serialize_rules = ("-customer.reviews", "-item.reviews")
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "comment": self.comment,
+            "customer": self.customer.name if self.customer else None,
+            "item": self.item.name if self.item else None
+        }
+
 
 
 class Customer(db.Model):
@@ -34,6 +42,12 @@ class Customer(db.Model):
     items = association_proxy("reviews", "item")
 
     serialize_rules = ("-reviews.customer",)
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "items": [item.to_dict() for item in self.items],
+        }
 
     def __repr__(self):
         return f'<Customer {self.id}, {self.name}>'
@@ -48,6 +62,8 @@ class Item(db.Model):
     reviews = db.relationship("Review", back_populates="item")
 
     serialize_rules = ("-reviews.item",)
+    def to_dict(self):
+        return {"id": self.id, "name": self.name, "price": self.price}
 
     def __repr__(self):
         return f'<Item {self.id}, {self.name}, {self.price}>'
